@@ -31,7 +31,12 @@ async function findByEmail(email: string): Promise<User | undefined> {
   return userRepository.findOneBy({ email })
 }
 
+async function findUserById(id: number): Promise<User | undefined> {
+  return userRepository.findOneBy({ id })
+}
+
 export const UserService = {
   create,
-  findByEmail
+  findByEmail,
+  findUserById
 }

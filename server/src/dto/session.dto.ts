@@ -1,0 +1,3 @@
+type SessionDto = {
+  userEmail: string;
+}
