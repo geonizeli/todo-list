@@ -1,5 +1,6 @@
 import { validate } from "class-validator";
 import { NewProjectDto } from "../dto/newProject.dto";
+import { UpdateProjectDto } from "../dto/updateProject.dto";
 import { Project } from "../entity/project.entity";
 import { User } from "../entity/user.entity";
 import { projectRepository } from "../repository/project.repository";
@@ -10,7 +11,7 @@ async function create(newProject: NewProjectDto): Promise<Project> {
   const user = await UserService.findUserById(newProject.userId);
 
   project.name = newProject.name;
-  project.user = user
+  project.user = user;
 
   const errors = await validate(project);
 
@@ -28,17 +29,28 @@ async function listAllByUserId(userId: User["id"]): Promise<Project[]> {
   return query.getMany();
 }
 
-async function destroy(project: Project): Promise<boolean>{
+async function destroy(project: Project): Promise<boolean> {
   const query = projectRepository.createQueryBuilder();
   query.where('"id" = :projectId', { projectId: project.id });
 
-  const result = await query.delete().execute()
+  const result = await query.delete().execute();
 
   return result.affected > 0;
+}
+
+async function update(
+  project: Project,
+  updateProjectDto: UpdateProjectDto
+): Promise<boolean> {
+  projectRepository.merge(project, updateProjectDto);
+  const updateResult = await projectRepository.save(project);
+
+  return !!updateResult;
 }
 
 export const ProjectService = {
   create,
   listAllByUserId,
-  destroy
+  destroy,
+  update,
 };
