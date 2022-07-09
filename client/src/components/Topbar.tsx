@@ -1,5 +1,5 @@
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
-import { useAuth } from "../providers/AuthProvider";
+import { useAuth } from "../hooks/useAuth";
 
 export const Topbar = () => {
   const { authenticated, logout, setIsLoginDialogOpen } = useAuth();

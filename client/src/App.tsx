@@ -9,6 +9,8 @@ import { AuthProvider } from "./providers/AuthProvider";
 
 import "./index.css";
 import { LoginDialog } from "./components/LoginDialog";
+import { UnautorizedBlock } from "./components/UnautorizedBlock";
+import { NewAccount } from "./pages/NewAccount/NewAccount";
 
 function App() {
   return (
@@ -16,6 +18,10 @@ function App() {
       <Topbar />
       <LoginDialog />
       <Container>
+        <UnautorizedBlock
+          protectedContent={<Home />}
+          unauthenticatedContent={<NewAccount />}
+        />
         <Home />
       </Container>
     </AuthProvider>

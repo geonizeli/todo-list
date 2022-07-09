@@ -7,11 +7,11 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { useAuth } from "../providers/AuthProvider";
+import { useAuth } from "../hooks/useAuth";
 
 export const LoginDialog = () => {
   const { isLoginDialogOpen, setIsLoginDialogOpen, login } = useAuth();
-  console.log(isLoginDialogOpen);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

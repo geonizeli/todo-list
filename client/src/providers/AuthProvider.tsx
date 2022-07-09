@@ -1,10 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
+import { createApiClient } from "../utils/apiFetch";
 
 type LoginCallback = (email: string, password: string) => void;
 type LogoutCallback = () => void;
@@ -16,19 +11,10 @@ type AuthProviderValue = {
   logout: LogoutCallback;
   setIsLoginDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isLoginDialogOpen: boolean;
+  apiClient: typeof fetch;
 };
 
-const AuthContext = createContext<AuthProviderValue | null>(null);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-
-  if (context === null) {
-    throw new Error("You probably forgot to put <PaymentProvider>.");
-  }
-
-  return context;
-};
+export const AuthContext = createContext<AuthProviderValue | null>(null);
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -36,16 +22,29 @@ type AuthProviderProps = {
 
 export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
   const [loading] = useState(true);
-  const [token] = useState<AuthProviderValue["token"]>(null);
+  const [token, setToken] = useState<AuthProviderValue["token"]>(null);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const apiClient = createApiClient(token ?? "");
 
-  const login = useCallback<LoginCallback>((_email, __password) => {
-    throw new Error("Not implemented yet");
-  }, []);
+  const login = useCallback<LoginCallback>((email, password) => {
+    apiClient("users/sign_in", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    }).then(async (res) => {
+      setToken(await res.json());
+    });
+  }, [apiClient, setToken]);
 
   const logout = useCallback<LogoutCallback>(() => {
-    throw new Error("Not implemented yet");
-  }, []);
+    apiClient("users/sign_out", {
+      method: "DELETE",
+    }).then(() => {
+      setToken(null);
+    });
+  }, [apiClient, setToken]);
 
   const authenticated = !!token;
 
@@ -65,6 +64,7 @@ export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
       value={{
         ...providerValue,
         ...rest,
+        apiClient,
         isLoginDialogOpen,
         setIsLoginDialogOpen,
       }}
