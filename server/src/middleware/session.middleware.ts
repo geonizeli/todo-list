@@ -1,9 +1,9 @@
 import { Handler, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { signInPath } from '../controller/users.controller';
+import { signInPath, createPath } from '../controller/user.controller';
 import { AuthService } from '../service/auth.service';
 
-export const UNPROTECTED_ROUTES = [signInPath];
+export const UNPROTECTED_ROUTES = [signInPath, createPath];
 
 export const sessionMiddleware: Handler = (req: Request, res: Response, next) => {
   const token = req.headers['x-access-token'];

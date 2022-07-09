@@ -1,1 +1,2 @@
-export { UserRoutes } from './users.controller'
+export { UserRoutes } from './user.controller'
+export { ProjectRoutes } from './project.controller'

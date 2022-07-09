@@ -2,7 +2,7 @@ import "reflect-metadata"
 import * as dotenv from 'dotenv';
 import * as express from 'express';
 import { AppDataSource } from "./infra/dataSource";
-import { UserRoutes } from "./controller";
+import { ProjectRoutes, UserRoutes } from "./controller";
 import { RedisConnection } from "./infra/redis";
 import { sessionMiddleware } from "./middleware/session.middleware";
 
@@ -11,12 +11,12 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-
 app.use(sessionMiddleware)
+
 app.use(UserRoutes)
+app.use(ProjectRoutes)
 
-
-const startApp =  async () => {
+const startApp = async () => {
   console.log('[redis]: connecting')
   await RedisConnection.connect()
   console.log('[redis]: connected')

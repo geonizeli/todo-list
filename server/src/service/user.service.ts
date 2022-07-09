@@ -8,13 +8,11 @@ async function create(newUserDto: NewUserDto): Promise<User> {
   const user = new User()
   user.email = newUserDto.email
 
-
   const errors = await validate(user);
 
-  if (errors.length > 0) {
+  if (errors.length) {
     throw new Error("Invalid user data")
   }
-
 
   const result = await findByEmail(user.email)
 
