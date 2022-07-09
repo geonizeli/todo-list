@@ -3,6 +3,7 @@ import { ProjectDto } from "../dto/poject.dto";
 import { ProjectService } from "../service/project.service";
 
 const router = Router();
+export const ProjectRoutes = router;
 
 export const apiNamespace = "/projects";
 
@@ -44,10 +45,7 @@ router.put(`${apiNamespace}/:id`, async (req, res) => {
   const { name } = req.body;
   const projectId = parseInt(id);
 
-  const userProjects = await ProjectService.listAllByUserId(req.userId);
-  const projectToBeUpdated = userProjects.find(
-    (project) => project.id === projectId
-  );
+  const projectToBeUpdated = await ProjectService.findProjectFromUserById(req.userId, projectId);
 
   if (projectToBeUpdated) {
     ProjectService.update(projectToBeUpdated, {
@@ -66,14 +64,11 @@ router.put(`${apiNamespace}/:id`, async (req, res) => {
   }
 });
 
-router.delete(`${apiNamespace}/:id`, async (req, res, next) => {
+router.delete(`${apiNamespace}/:id`, async (req, res) => {
   const { id } = req.params;
   const projectId = parseInt(id);
 
-  const userProjects = await ProjectService.listAllByUserId(req.userId);
-  const projecToBeDeleted = userProjects.find(
-    (project) => project.id === projectId
-  );
+  const projecToBeDeleted = await ProjectService.findProjectFromUserById(req.userId, projectId);
 
   if (projecToBeDeleted) {
     const success = await ProjectService.destroy(projecToBeDeleted);
@@ -91,5 +86,3 @@ router.delete(`${apiNamespace}/:id`, async (req, res, next) => {
     });
   }
 });
-
-export const ProjectRoutes = router;

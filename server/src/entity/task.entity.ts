@@ -24,7 +24,10 @@ export class Task {
   @Column({ type: "timestamptz", nullable: true })
   finishedAt?: Date;
 
-  @ManyToOne((_type) => Project, (project) => project.tasks)
+  @ManyToOne((_type) => Project, (project) => project.tasks,{
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  })
   @JoinColumn()
   @IsNotEmpty()
   project: Project;

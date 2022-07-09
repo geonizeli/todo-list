@@ -48,9 +48,21 @@ async function update(
   return !!updateResult;
 }
 
+async function findProjectFromUserById(
+  userId: User["id"],
+  projectId: Project["id"]
+): Promise<Project> {
+  const query = projectRepository.createQueryBuilder();
+  query.where('"userId" = :userId', { userId });
+  query.andWhere('"id" = :projectId', { projectId });
+
+  return query.getOne();
+}
+
 export const ProjectService = {
   create,
   listAllByUserId,
   destroy,
   update,
+  findProjectFromUserById
 };

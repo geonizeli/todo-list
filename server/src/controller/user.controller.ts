@@ -4,6 +4,7 @@ import { AuthService } from '../service/auth.service';
 import { UserService } from '../service/user.service';
 
 const router = Router();
+export const UserRoutes = router;
 
 export const apiNamespace = '/users'
 
@@ -64,5 +65,3 @@ router.delete(`${apiNamespace}/sign_out`, async (req, res) => {
     })
   }
 })
-
-export const UserRoutes = router;
