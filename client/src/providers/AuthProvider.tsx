@@ -26,12 +26,15 @@ export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
   const [loading] = useState(true);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const token = cookies.token;
-  const setToken = (value: string) => {
-    setCookie("token", value);
-  };
-  const removeToken = () => {
+  const setToken = useCallback(
+    (value: string) => {
+      setCookie("token", value);
+    },
+    [setCookie]
+  );
+  const removeToken = useCallback(() => {
     removeCookie("token");
-  };
+  }, [removeCookie]);
   const apiClient = createApiClient(token ?? "");
 
   const login = useCallback<LoginCallback>(
@@ -44,6 +47,7 @@ export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
         }),
       }).then(async (res) => {
         setToken(await res.json());
+        setIsLoginDialogOpen(false);
       });
     },
     [apiClient, setToken]
@@ -55,7 +59,7 @@ export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
     }).then(() => {
       removeToken();
     });
-  }, [apiClient, setToken]);
+  }, [apiClient, removeToken]);
 
   const authenticated = !!token;
 
