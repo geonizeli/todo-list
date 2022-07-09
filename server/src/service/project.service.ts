@@ -28,7 +28,17 @@ async function listAllByUserId(userId: User["id"]): Promise<Project[]> {
   return query.getMany();
 }
 
+async function destroyProject(project: Project): Promise<boolean>{
+  const query = projectRepository.createQueryBuilder();
+  query.where('"id" = :projectId', { projectId: project.id });
+
+  const result = await query.delete().execute()
+
+  return result.affected > 0;
+}
+
 export const ProjectService = {
   create,
   listAllByUserId,
+  destroyProject
 };

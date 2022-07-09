@@ -44,8 +44,6 @@ describe('AuthService', () => {
         });
       })
 
-      const currentUserEncryptedPassowrd = user.encryptedPassword
-
       const result = await AuthService.isUserPasswordValid(user, 'example');
 
       expect(result).toBeTruthy()
@@ -65,8 +63,6 @@ describe('AuthService', () => {
           resolve()
         });
       })
-
-      const currentUserEncryptedPassowrd = user.encryptedPassword
 
       const result = await AuthService.isUserPasswordValid(user, 'example2');
 

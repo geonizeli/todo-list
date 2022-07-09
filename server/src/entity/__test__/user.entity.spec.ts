@@ -7,8 +7,12 @@ import { User } from "../user.entity";
 describe("User", () => {
   beforeAll(async () => {
     await AppDataSource.initialize();
-    await cleanDataSource(AppDataSource, ["project", "user"]);
+    await cleanDataSource(AppDataSource);
   });
+  afterAll(async () => {
+    await cleanDataSource(AppDataSource);
+    await AppDataSource.destroy()
+  })
 
   describe("relations", () => {
     it("should have many projects", async () => {

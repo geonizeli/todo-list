@@ -1,14 +1,16 @@
-import { Handler, Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { verify } from 'jsonwebtoken';
-import { signInPath, createPath } from '../controller/user.controller';
+import { apiNamespace as userControllerNamespace } from '../controller/user.controller';
 import { AuthService } from '../service/auth.service';
 
-export const UNPROTECTED_ROUTES = [signInPath, createPath];
+export const isRouteUnprotected = (path: string) => {
+  return path.startsWith(userControllerNamespace)
+}
 
-export const sessionMiddleware: Handler = (req: Request, res: Response, next) => {
+export const sessionMiddleware: RequestHandler = (req, res, next) => {
   const token = req.headers['x-access-token'];
 
-  if (UNPROTECTED_ROUTES.includes(req.url)) {
+  if (isRouteUnprotected(req.url)) {
     next();
   } else if (typeof token === 'string') {
     AuthService.isSessionValid(token).then(valid => {

@@ -2,15 +2,12 @@ import { Router } from 'express';
 import { UserDto } from '../dto/user.dto';
 import { AuthService } from '../service/auth.service';
 import { UserService } from '../service/user.service';
-import { createPath as buildPath } from '../utils/createPath';
 
 const router = Router();
 
-const BASE_PATH = '/users'
+export const apiNamespace = '/users'
 
-export const createPath = BASE_PATH
-
-router.post(createPath, (req, res) => {
+router.post(apiNamespace, (req, res) => {
   const { email, password } = req.body;
 
   UserService.create({
@@ -30,8 +27,7 @@ router.post(createPath, (req, res) => {
   })
 })
 
-export const signInPath = buildPath(BASE_PATH, 'sign_in')
-router.post(signInPath, async (req, res) => {
+router.post(`${apiNamespace}/sign_in`, async (req, res) => {
   const { email, password } = req.body;
 
   const user = await UserService.findByEmail(email)
@@ -53,8 +49,7 @@ router.post(signInPath, async (req, res) => {
   }
 })
 
-export const signOutPath = buildPath(BASE_PATH, 'sign_out')
-router.delete(signOutPath, async (req, res) => {
+router.delete(`${apiNamespace}/sign_out`, async (req, res) => {
   const token = req.headers['x-access-token']
 
   if (typeof token === 'string') {

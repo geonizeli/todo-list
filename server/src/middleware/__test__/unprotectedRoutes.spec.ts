@@ -1,8 +1,9 @@
-import { signInPath, createPath } from '../../controller/users.controller';
-import { UNPROTECTED_ROUTES } from '../session.middleware'
-
-describe('Unprotected Routes', () => {
-  it('check content', () => {
-    expect(UNPROTECTED_ROUTES.sort()).toEqual([createPath, signInPath].sort());
+import {isRouteUnprotected} from '../session.middleware'
+describe('isRouteUnprotected', () => {
+  it('validate unprotected routes', () => {
+    expect(isRouteUnprotected('/users')).toBeTruthy()
+    expect(isRouteUnprotected('/users/sign_in')).toBeTruthy()
+    expect(isRouteUnprotected('/users/sign_out')).toBeTruthy()
+    expect(isRouteUnprotected('/projects')).toBeFalsy()
   })
 })

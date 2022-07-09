@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 
 export const cleanDataSource = async (
   dataSource: DataSource,
-  entityNames: string[]
+  entityNames: string[] = ["project", "user"]
 ) => {
   if (process.env.NODE_ENV !== "test") {
     throw new Error(
