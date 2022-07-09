@@ -1,3 +1,4 @@
+import * as cors from 'cors';
 import * as dotenv from 'dotenv';
 import * as express from 'express';
 import "reflect-metadata";
@@ -11,6 +12,7 @@ dotenv.config();
 
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(sessionMiddleware)
 
