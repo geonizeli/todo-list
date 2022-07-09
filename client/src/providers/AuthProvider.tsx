@@ -1,4 +1,5 @@
 import { createContext, useCallback, useMemo, useState } from "react";
+import { useCookies } from "react-cookie";
 import { createApiClient } from "../utils/apiFetch";
 
 type LoginCallback = (email: string, password: string) => void;
@@ -21,28 +22,38 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [loading] = useState(true);
-  const [token, setToken] = useState<AuthProviderValue["token"]>(null);
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const token = cookies.token;
+  const setToken = (value: string) => {
+    setCookie("token", value);
+  };
+  const removeToken = () => {
+    removeCookie("token");
+  };
   const apiClient = createApiClient(token ?? "");
 
-  const login = useCallback<LoginCallback>((email, password) => {
-    apiClient("users/sign_in", {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    }).then(async (res) => {
-      setToken(await res.json());
-    });
-  }, [apiClient, setToken]);
+  const login = useCallback<LoginCallback>(
+    (email, password) => {
+      apiClient("users/sign_in", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }).then(async (res) => {
+        setToken(await res.json());
+      });
+    },
+    [apiClient, setToken]
+  );
 
   const logout = useCallback<LogoutCallback>(() => {
     apiClient("users/sign_out", {
       method: "DELETE",
     }).then(() => {
-      setToken(null);
+      removeToken();
     });
   }, [apiClient, setToken]);
 

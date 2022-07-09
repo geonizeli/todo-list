@@ -11,20 +11,23 @@ import "./index.css";
 import { LoginDialog } from "./components/LoginDialog";
 import { UnautorizedBlock } from "./components/UnautorizedBlock";
 import { NewAccount } from "./pages/NewAccount/NewAccount";
+import { CookiesProvider } from "react-cookie";
 
 function App() {
   return (
-    <AuthProvider>
-      <Topbar />
-      <LoginDialog />
-      <Container>
-        <UnautorizedBlock
-          protectedContent={<Home />}
-          unauthenticatedContent={<NewAccount />}
-        />
-        <Home />
-      </Container>
-    </AuthProvider>
+    <CookiesProvider>
+      <AuthProvider>
+        <Topbar />
+        <LoginDialog />
+        <Container>
+          <UnautorizedBlock
+            protectedContent={<Home />}
+            unauthenticatedContent={<NewAccount />}
+          />
+          <Home />
+        </Container>
+      </AuthProvider>
+    </CookiesProvider>
   );
 }
 
