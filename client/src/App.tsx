@@ -3,15 +3,13 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Container } from "@mui/material";
-import { Topbar } from "./components/Topbar";
-import { Home } from "./pages";
-import { AuthProvider } from "./providers/AuthProvider";
-
-import "./index.css";
-import { LoginDialog } from "./components/LoginDialog";
-import { UnautorizedBlock } from "./components/UnautorizedBlock";
-import { NewAccount } from "./pages/NewAccount/NewAccount";
 import { CookiesProvider } from "react-cookie";
+import { LoginDialog } from "./components/LoginDialog";
+import { Topbar } from "./components/Topbar";
+import { UnautorizedBlock } from "./components/UnautorizedBlock";
+import "./index.css";
+import { NewAccount, Projects } from "./pages";
+import { AuthProvider } from "./providers/AuthProvider";
 
 function App() {
   return (
@@ -21,10 +19,9 @@ function App() {
         <LoginDialog />
         <Container>
           <UnautorizedBlock
-            protectedContent={<Home />}
+            protectedContent={<Projects />}
             unauthenticatedContent={<NewAccount />}
           />
-          <Home />
         </Container>
       </AuthProvider>
     </CookiesProvider>
