@@ -45,7 +45,7 @@ router.delete(`${apiNamespace}/:id`, async (req, res, next) => {
   const projecToBeDeleted = userProjects.find(project => project.id === projectId)
 
   if (projecToBeDeleted) {
-    const success = await ProjectService.destroyProject(projecToBeDeleted)
+    const success = await ProjectService.destroy(projecToBeDeleted)
 
     if (success) {
       res.json({ success })

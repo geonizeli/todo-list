@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { AppDataSource } from "../../infra/dataSource";
 import { userRepository } from "../../repository/user.repository";
 import { cleanDataSource } from "../../utils/cleanDataSource";
@@ -11,8 +12,8 @@ describe("User", () => {
   });
   afterAll(async () => {
     await cleanDataSource(AppDataSource);
-    await AppDataSource.destroy()
-  })
+    await AppDataSource.destroy();
+  });
 
   describe("relations", () => {
     it("should have many projects", async () => {
@@ -21,13 +22,13 @@ describe("User", () => {
 
       Object.assign(user, {
         name: "John Doe",
-        email: "john.doe@example.com",
+        email: faker.internet.email(),
         encryptedPassword: "encryptedPassword",
       });
 
       Object.assign(user2, {
         name: "Luis Doe",
-        email: "luis.doe@example.com",
+        email: faker.internet.email(),
         encryptedPassword: "encryptedPassword",
       });
 
@@ -40,10 +41,10 @@ describe("User", () => {
       user.projects = [project1, proejct2];
 
       await userRepository.save(user);
-      await userRepository.save(user2)
+      await userRepository.save(user2);
 
       expect(user.projects).toHaveLength(2);
-      expect(user2.projects).toBeUndefined()
+      expect(user2.projects).toBeUndefined();
     });
   });
 });
