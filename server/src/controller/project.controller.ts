@@ -15,7 +15,9 @@ router.get(apiNamespace, async (req, res) => {
     name: project.name,
   }));
 
-  res.json(response);
+  res.json({
+    data: response
+  });
 });
 
 router.post(apiNamespace, (req, res) => {
