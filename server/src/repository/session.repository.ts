@@ -3,13 +3,13 @@ import { RedisConnection } from "../infra/redis"
 const sessionExists = async (jwt: string): Promise<boolean> => {
   const result = await RedisConnection.get(jwt)
 
-  return result == "valid"
+  return result === "EXIST"
 }
 
 const saveSession = async (jwt: string): Promise<boolean> => {
-  const result = await RedisConnection.set(jwt, 'valid')
+  const result = await RedisConnection.set(jwt, 'EXIST')
 
-  return result == "valid"
+  return result === "OK"
 }
 
 const deleteSession = async (jwt: string): Promise<boolean> => {
