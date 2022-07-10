@@ -1,6 +1,6 @@
 import { List, ListSubheader } from "@mui/material";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useProject } from "../../../../hooks/useProject";
+import { useAuth } from "../../../../../hooks/useAuth";
+import { useProject } from "../../../../../hooks/useProject";
 import { Task, TasksListItem } from "./TasksListItem";
 
 export type TaskListProps = {

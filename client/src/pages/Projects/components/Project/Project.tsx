@@ -8,7 +8,7 @@ import { ProjectProvider } from "../../../../providers/ProjectProvider";
 import { createSWRFetcher } from "../../../../utils/swrFetcher";
 import { AddTask } from "./AddTask";
 import { ProjectOptions } from "./ProjectOptions";
-import { TaskListProps, TasksList } from "./TasksList";
+import { TaskListProps, TasksList } from "./TaskList/TasksList";
 
 export type APIProjectTasksList = {
   data: TaskListProps["tasks"];
