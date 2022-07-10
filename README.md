@@ -1,3 +1,3 @@
 # Setup
 
-Please, check client/README.md and server/README.md for instructions
+Please, check `./client/README.md` and `./server/README.md` for instructions
