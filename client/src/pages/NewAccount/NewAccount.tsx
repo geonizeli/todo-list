@@ -54,8 +54,8 @@ export const NewAccount = () => {
           label="Email Address"
           type="email"
           variant="standard"
+          required
           {...register("email", {
-            required: true,
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
               message: "Invalid email address",
@@ -71,7 +71,8 @@ export const NewAccount = () => {
           label="Password"
           type="password"
           variant="standard"
-          {...register("password", { required: true, minLength: 8 })}
+          required
+          {...register("password", { minLength: 8 })}
         />
         <Stack direction="row-reverse" spacing={3}>
           <LoadingButton type="submit" loading={loading} variant="contained">

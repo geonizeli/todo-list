@@ -61,6 +61,7 @@ export const NewProjectAction = ({ mutate }: NewProjectActionProps) => {
           <DialogTitle>New project</DialogTitle>
           <DialogContent>
             <TextField
+              required
               {...register("name")}
               disabled={isLoading}
               autoFocus

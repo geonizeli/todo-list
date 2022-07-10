@@ -31,6 +31,7 @@ export const AddTask = () => {
     <Box onSubmit={handleSubmit(onSubmit)} component={"form"}>
       <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
         <TextField
+          required
           disabled={isLoading}
           placeholder="New task description "
           variant="standard"

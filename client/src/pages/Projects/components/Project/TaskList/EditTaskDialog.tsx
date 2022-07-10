@@ -6,7 +6,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuth } from "../../../../../hooks/useAuth";
 import { useProject } from "../../../../../hooks/useProject";
@@ -30,12 +30,14 @@ export const EditTaskDialog = ({
   const [isLoading, setIsLoading] = useState(false);
   const { apiClient } = useAuth();
   const { tasksMutate, project } = useProject();
-  const { register, handleSubmit, reset } = useForm<EditProjectForm>({
-    defaultValues: task,
-  });
+  const { register, handleSubmit, setValue } = useForm<EditProjectForm>();
+
+  useEffect(() => {
+    setValue("description", task.description);
+  }, [setValue, task.description]);
 
   const handleClose = () => {
-    reset();
+    setValue("description", task.description);
     setOpen(false);
   };
 
@@ -58,6 +60,7 @@ export const EditTaskDialog = ({
         <DialogTitle>Rename task</DialogTitle>
         <DialogContent>
           <TextField
+            required
             {...register("description")}
             disabled={isLoading}
             autoFocus

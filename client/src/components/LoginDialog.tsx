@@ -6,49 +6,54 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuth } from "../hooks/useAuth";
+
+type LoginForm = {
+  email: string;
+  password: string;
+};
 
 export const LoginDialog = () => {
   const { isLoginDialogOpen, setIsLoginDialogOpen, login } = useAuth();
+  const { register, handleSubmit } = useForm<LoginForm>();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = () => {
-    login(email, password);
+  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+    login(data.email, data.password);
   };
-
   const handleClose = () => {
     setIsLoginDialogOpen(false);
   };
 
   return (
     <Dialog open={isLoginDialogOpen} onClose={handleClose}>
-      <DialogTitle>Login</DialogTitle>
-      <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          label="Email Address"
-          type="email"
-          fullWidth
-          variant="standard"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          margin="dense"
-          label="Password"
-          type="password"
-          fullWidth
-          variant="standard"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Confirm</Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogTitle>Login</DialogTitle>
+        <DialogContent>
+          <TextField
+            required
+            {...register("email")}
+            autoFocus
+            margin="dense"
+            label="Email"
+            type="email"
+            fullWidth
+            variant="standard"
+          />
+          <TextField
+            required
+            {...register("password")}
+            margin="dense"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };
