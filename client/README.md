@@ -1,6 +1,9 @@
-# Getting Started with Create React App
+## Requirements
+- Node.js >= 16
+- npm or yarn
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Setup
+- Download dependencies with `yarn install`
 
 ## Available Scripts
 
