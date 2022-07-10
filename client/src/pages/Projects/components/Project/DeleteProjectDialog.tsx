@@ -7,8 +7,8 @@ import {
   DialogTitle
 } from "@mui/material";
 import { SetStateAction, useState } from "react";
-import { useAuth } from "../../../hooks/useAuth";
-import { useProject } from "../../../hooks/useProject";
+import { useAuth } from "../../../../hooks/useAuth";
+import { useProject } from "../../../../hooks/useProject";
 
 export type DeleteProjectDialogProps = {
   open: boolean;

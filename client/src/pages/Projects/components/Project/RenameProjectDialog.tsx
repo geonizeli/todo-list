@@ -8,8 +8,8 @@ import {
 } from "@mui/material";
 import { SetStateAction, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useAuth } from "../../../hooks/useAuth";
-import { useProject } from "../../../hooks/useProject";
+import { useAuth } from "../../../../hooks/useAuth";
+import { useProject } from "../../../../hooks/useProject";
 
 type RenameProjectForm = {
   name: string;

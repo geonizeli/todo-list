@@ -10,8 +10,8 @@ import {
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { KeyedMutator } from "swr";
-import { useAuth } from "../../../hooks/useAuth";
-import { APIProjectList } from "../Projects";
+import { useAuth } from "../../../../hooks/useAuth";
+import { APIProjectList } from "../../Projects";
 
 type NewProjectForm = {
   name: string;

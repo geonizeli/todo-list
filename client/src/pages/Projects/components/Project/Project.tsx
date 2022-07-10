@@ -1,15 +1,11 @@
-import { Add } from "@mui/icons-material";
 import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  IconButton,
+  Card, CardContent,
+  CardHeader
 } from "@mui/material";
 import useSWR from "swr";
-import { useAuth } from "../../../hooks/useAuth";
-import { ProjectProvider } from "../../../providers/ProjectProvider";
-import { createSWRFetcher } from "../../../utils/swrFetcher";
+import { useAuth } from "../../../../hooks/useAuth";
+import { ProjectProvider } from "../../../../providers/ProjectProvider";
+import { createSWRFetcher } from "../../../../utils/swrFetcher";
 import { AddTask } from "./AddTask";
 import { ProjectOptions } from "./ProjectOptions";
 import { TaskListProps, TasksList } from "./TasksList";
@@ -49,11 +45,6 @@ export const Project = (props: ProjectProps) => {
           <TasksList title="To Do" tasks={uncompletedTasks} />
           <TasksList title="Done" tasks={completedTasks} />
         </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add task">
-            <Add />
-          </IconButton>
-        </CardActions>
       </Card>
     </ProjectProvider>
   );
