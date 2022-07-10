@@ -11,7 +11,7 @@ import useSWR from "swr";
 import { useAuth } from "../../../hooks/useAuth";
 import { createSWRFetcher } from "../../../utils/swrFetcher";
 import { TaskListProps, TasksList } from "./TasksList";
-
+import { AddTask } from "./AddTask";
 export type APIProjectTasksList = {
   data: TaskListProps["tasks"];
 };
@@ -44,6 +44,7 @@ export const Project = (props: ProjectProps) => {
         title={props.name}
       />
       <CardContent>
+        <AddTask projectId={props.id} mutate={mutate} />
         <TasksList
           projectId={props.id}
           mutate={mutate}
