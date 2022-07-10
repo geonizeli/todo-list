@@ -15,7 +15,9 @@ router.post(apiNamespace, (req, res) => {
     password,
   })
     .then(() => {
-      res.json();
+      res.json({
+        success: true,
+      });
     })
     .catch((err) => {
       res.status(422).json({
@@ -28,6 +30,13 @@ router.post(`${apiNamespace}/sign_in`, async (req, res) => {
   const { email, password } = req.body;
 
   const user = await UserService.findByEmail(email);
+
+  if (!user) {
+    res.status(500).json({
+      error: "Invalid credentails",
+    });
+    return;
+  }
 
   const isPasswordValid = await AuthService.isUserPasswordValid(user, password);
 
