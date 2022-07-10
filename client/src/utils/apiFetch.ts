@@ -14,5 +14,6 @@ export const createApiClient =
       ...rest,
     };
 
-    return fetch(host + input, customInt);
+    const host = process.env.REACT_APP_API_URL ?? ""
+    return fetch(`${host}/${input}`, customInt);
   };

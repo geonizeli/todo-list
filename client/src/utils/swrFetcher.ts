@@ -1,5 +1,3 @@
-const host = "http://localhost:5000/";
-
 export const createSWRFetcher =
   (token: string | null) => async (input: RequestInfo | URL, init?: RequestInit) => {
     const { headers, ...rest } = init ?? {};
@@ -13,6 +11,7 @@ export const createSWRFetcher =
       ...rest,
     };
 
-    const res = await fetch(host + input, customInt);
+    const host = process.env.REACT_APP_API_URL ?? ""
+    const res = await fetch(`${host}/${input}`, customInt);
     return await res.json();
   };
