@@ -46,7 +46,7 @@ export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
           password,
         }),
       }).then(async (res) => {
-        setToken(await res.json());
+        setToken((await res.json()).token);
         setIsLoginDialogOpen(false);
       });
     },

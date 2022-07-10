@@ -2,7 +2,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { CookiesProvider } from "react-cookie";
 import { LoginDialog } from "./components/LoginDialog";
 import { Topbar } from "./components/Topbar";
@@ -18,10 +18,12 @@ function App() {
         <Topbar />
         <LoginDialog />
         <Container>
-          <UnautorizedBlock
-            protectedContent={<Projects />}
-            unauthenticatedContent={<NewAccount />}
-          />
+          <Box marginTop={3}>
+            <UnautorizedBlock
+              protectedContent={<Projects />}
+              unauthenticatedContent={<NewAccount />}
+            />
+          </Box>
         </Container>
       </AuthProvider>
     </CookiesProvider>
