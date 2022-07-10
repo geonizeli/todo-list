@@ -1,4 +1,5 @@
 import { List, ListSubheader } from "@mui/material";
+import { EmptySate } from "../../../../../components/EmptyState";
 import { useAuth } from "../../../../../hooks/useAuth";
 import { useProject } from "../../../../../hooks/useProject";
 import { Task, TasksListItem } from "./TasksListItem";
@@ -35,6 +36,9 @@ export const TasksList = ({ title, tasks }: TaskListProps) => {
         </ListSubheader>
       }
     >
+      {tasks.length ? null : (
+        <EmptySate mini>You didn't have any task on '{title}' yet</EmptySate>
+      )}
       {tasks.map((task) => (
         <TasksListItem
           key={task.id}
