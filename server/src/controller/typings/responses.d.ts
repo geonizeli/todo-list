@@ -1,10 +1,14 @@
 export type ErrorResponse = {
   errors: string[];
-};
+} | string;
 
 export type IndexResponse<TData> = {
   data: TData[];
-};
+} | string;
+
+export type ShowResponse<TData> = {
+  data: TData;
+}
 
 export type CreateResponse<TData> =
   | {

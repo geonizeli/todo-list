@@ -1,3 +1,3 @@
 type SessionDto = {
-  userEmail: string;
-}
+  token: string | null;
+};

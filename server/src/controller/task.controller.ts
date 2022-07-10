@@ -1,77 +1,90 @@
 import { Router } from "express";
-import { ProjectDto } from "../dto/poject.dto";
+import { NewTaskDto } from "../dto/task.new.dto";
 import { ProjectService } from "../service/project.service";
 import { TaskService } from "../service/task.service";
+import {
+  CreateResponse,
+  DeleteResponse,
+  IndexResponse,
+  ShowResponse,
+  UpdateResponse,
+} from "./typings/responses";
 
-const router = Router();
-export const TaskRoutes = router;
+export const routes = Router();
 
-export const apiNamespace = "/projects/:projectId";
+export const apiNamespace = "/projects/:projectId/tasks";
 
-router.get(`${apiNamespace}/tasks`, async (req, res) => {
+routes.get<typeof apiNamespace, { projectId: string }, IndexResponse<TaskDto>>(
+  apiNamespace,
+  async (req, res) => {
+    const { projectId } = req.params;
+    const parsedProjctId = parseInt(projectId);
+
+    const project = await ProjectService.findProjectFromUserById(
+      req.userId,
+      parsedProjctId
+    );
+
+    if (!project) {
+      res.status(404).send("Not found");
+    } else {
+      const tasks = await TaskService.findByProjectId(parsedProjctId);
+
+      res.json({
+        data: tasks.map((task) => ({
+          id: task.id,
+          description: task.description,
+          createdAt: task.createdAt,
+          finishedAt: task.finishedAt,
+        })),
+      });
+    }
+  }
+);
+
+routes.post<
+  typeof apiNamespace,
+  { projectId: string },
+  CreateResponse<TaskDto>,
+  NewTaskDto
+>(apiNamespace, async (req, res) => {
   let { projectId } = req.params;
-  const parsedProjctId = parseInt(projectId);
 
   const project = await ProjectService.findProjectFromUserById(
     req.userId,
-    parsedProjctId
+    parseInt(projectId)
   );
 
   if (!project) {
-    res.status(404).json({
-      error: "Project not found",
+    res.status(404).send("Not found");
+  } else {
+    const task = await TaskService.create(project, {
+      description: req.body.description,
     });
-    return;
+
+    res.json({
+      data: {
+        id: task.id,
+        createdAt: task.createdAt,
+        description: task.description,
+        finishedAt: task.finishedAt,
+      },
+    });
   }
-
-  const tasks: TaskDto[] = (
-    await TaskService.findByProjectId(parsedProjctId)
-  ).map((task) => ({
-    id: task.id,
-    description: task.description,
-    createdAt: task.createdAt,
-    finishedAt: task.finishedAt,
-  }));
-
-  res.json({
-    data: tasks,
-  });
 });
 
-router.post(`${apiNamespace}/tasks`, async (req, res) => {
-  let { projectId } = req.params;
-  const parsedProjctId = parseInt(projectId);
-
-  const project = await ProjectService.findProjectFromUserById(
-    req.userId,
-    parsedProjctId
-  );
-
-  if (!project) {
-    res.status(404).json();
-    return;
-  }
-
-  const task = await TaskService.create(project, {
-    description: req.body.description,
-  });
-
-  const taskDto: TaskDto = {
-    id: task.id,
-    createdAt: task.createdAt,
-    description: task.description,
-    finishedAt: task.finishedAt,
-  };
-
-  res.json({
-    data: taskDto,
-  });
-});
-
-router.put(`${apiNamespace}/tasks/:id`, async (req, res) => {
-  let { projectId, id } = req.params;
+const puthPath = `${apiNamespace}/:taskId`;
+routes.put<
+  typeof puthPath,
+  {
+    projectId: string;
+    taskId: string;
+  },
+  UpdateResponse<TaskDto>,
+  UpdateTaskDto
+>(puthPath, async (req, res) => {
+  const { projectId, taskId } = req.params;
   const { description }: UpdateTaskDto = req.body;
-
   const parsedProjctId = parseInt(projectId);
 
   const project = await ProjectService.findProjectFromUserById(
@@ -80,31 +93,36 @@ router.put(`${apiNamespace}/tasks/:id`, async (req, res) => {
   );
 
   if (!project) {
-    res.status(404).json();
-    return;
+    res.status(404).send("Not found");
   }
 
   const task = await TaskService.findByProjectIdAndTaskId(
     parsedProjctId,
-    parseInt(id)
+    parseInt(taskId)
   );
 
   await TaskService.update(task, { description });
 
-  const taskDto: TaskDto = {
-    id: task.id,
-    createdAt: task.createdAt,
-    description: task.description,
-    finishedAt: task.finishedAt,
-  };
-
   res.json({
-    data: taskDto,
+    data: {
+      id: task.id,
+      createdAt: task.createdAt,
+      description: task.description,
+      finishedAt: task.finishedAt,
+    },
   });
 });
 
-router.delete(`${apiNamespace}/tasks/:id`, async (req, res) => {
-  let { projectId, id } = req.params;
+const deletePath = `${apiNamespace}/:taskId`;
+routes.delete<
+  typeof deletePath,
+  {
+    projectId: string;
+    taskId: string;
+  },
+  DeleteResponse
+>(deletePath, async (req, res) => {
+  let { projectId, taskId } = req.params;
   const parsedProjctId = parseInt(projectId);
 
   const project = await ProjectService.findProjectFromUserById(
@@ -112,32 +130,32 @@ router.delete(`${apiNamespace}/tasks/:id`, async (req, res) => {
     parsedProjctId
   );
 
-  if (!project) {
-    res.status(404).json();
-    return;
-  }
-
   const task = await TaskService.findByProjectIdAndTaskId(
     parsedProjctId,
-    parseInt(id)
+    parseInt(taskId)
   );
 
-  if (!task) {
-    res.status(404).json();
-    return;
-  }
-
-  const success = await TaskService.destroy(task);
-
-  if (success) {
-    res.status(204).json();
+  if (!project || !task) {
+    res.status(404).send("Not found");
   } else {
-    res.status(504).json();
+    const success = await TaskService.destroy(task);
+
+    res.status(success ? 204 : 505).json({
+      success,
+    });
   }
 });
 
-router.get(`${apiNamespace}/tasks/:id/finish`, async (req, res) => {
-  const { projectId, id } = req.params;
+const finishPath = `${apiNamespace}/:taskId/finish`;
+routes.get<
+  typeof finishPath,
+  {
+    projectId: string;
+    taskId: string;
+  },
+  ShowResponse<TaskDto>
+>(finishPath, async (req, res) => {
+  const { projectId, taskId } = req.params;
   const parsedProjctId = parseInt(projectId);
 
   const project = await ProjectService.findProjectFromUserById(
@@ -145,27 +163,23 @@ router.get(`${apiNamespace}/tasks/:id/finish`, async (req, res) => {
     parsedProjctId
   );
 
-
   const task = await TaskService.findByProjectIdAndTaskId(
     parsedProjctId,
-    parseInt(id)
+    parseInt(taskId)
   );
 
   if (!project || !task) {
     res.status(404).json();
-    return;
+  } else {
+    await TaskService.finish(task);
+
+    res.json({
+      data: {
+        id: task.id,
+        createdAt: task.createdAt,
+        description: task.description,
+        finishedAt: task.finishedAt,
+      },
+    });
   }
-
-  const result = await TaskService.finish(task);
-
-  const resultDto: TaskDto = {
-    id: result.id,
-    createdAt: result.createdAt,
-    description: result.description,
-    finishedAt: result.finishedAt,
-  };
-
-  res.json({
-    data: resultDto,
-  });
 });

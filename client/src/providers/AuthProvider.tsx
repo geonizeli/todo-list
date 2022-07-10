@@ -47,7 +47,7 @@ export const AuthProvider = ({ children, ...rest }: AuthProviderProps) => {
         }),
       }).then(async (res) => {
         if (res.status === 200) {
-          setToken((await res.json()).token);
+          setToken((await res.json()).data.token);
           setIsLoginDialogOpen(false);
         }
       });

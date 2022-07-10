@@ -31,8 +31,8 @@ export const NewAccount = () => {
     })
       .then(async (res) => {
         const result = await res.json();
-        if (result.error) {
-          setError(result.error);
+        if (result.errors) {
+          setError(result.errors[0]);
         } else {
           login(data.email, data.password);
         }
