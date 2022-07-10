@@ -2,31 +2,26 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 import { Box, Button, TextField, Toolbar } from "@mui/material";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { KeyedMutator } from "swr";
 import { useAuth } from "../../../hooks/useAuth";
-import { APIProjectTasksList } from "./Project";
+import { useProject } from "../../../hooks/useProject";
 
 type NewTaskForm = {
   description: string;
 };
 
-export type AddTaskProps = {
-  projectId: number;
-  mutate: KeyedMutator<APIProjectTasksList>;
-};
-
-export const AddTask = ({ projectId, mutate }: AddTaskProps) => {
+export const AddTask = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { apiClient } = useAuth();
   const { register, handleSubmit, reset } = useForm<NewTaskForm>();
+  const { tasksMutate, project } = useProject();
 
   const onSubmit: SubmitHandler<NewTaskForm> = (data) => {
     setIsLoading(true);
-    apiClient(`projects/${projectId}/tasks`, {
+    apiClient(`projects/${project.id}/tasks`, {
       method: "POST",
       body: JSON.stringify(data),
     }).then(() => {
-      mutate();
+      tasksMutate();
       reset();
       setIsLoading(false);
     });

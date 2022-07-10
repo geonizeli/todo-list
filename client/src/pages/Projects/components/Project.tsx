@@ -1,5 +1,4 @@
 import { Add } from "@mui/icons-material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
   Card,
   CardActions,
@@ -9,9 +8,12 @@ import {
 } from "@mui/material";
 import useSWR from "swr";
 import { useAuth } from "../../../hooks/useAuth";
+import { ProjectProvider } from "../../../providers/ProjectProvider";
 import { createSWRFetcher } from "../../../utils/swrFetcher";
-import { TaskListProps, TasksList } from "./TasksList";
 import { AddTask } from "./AddTask";
+import { ProjectOptions } from "./ProjectOptions";
+import { TaskListProps, TasksList } from "./TasksList";
+
 export type APIProjectTasksList = {
   data: TaskListProps["tasks"];
 };
@@ -19,6 +21,7 @@ export type APIProjectTasksList = {
 export type ProjectProps = {
   id: number;
   name: string;
+  projectMutate: Function;
 };
 
 export const Project = (props: ProjectProps) => {
@@ -34,35 +37,24 @@ export const Project = (props: ProjectProps) => {
   const completedTasks = data?.data.filter((task) => task.finishedAt) ?? [];
 
   return (
-    <Card sx={{ margin: 4 }}>
-      <CardHeader
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
+    <ProjectProvider
+      project={props}
+      tasksMutate={mutate}
+      projectMutate={props.projectMutate}
+    >
+      <Card sx={{ margin: 4 }}>
+        <CardHeader action={<ProjectOptions />} title={props.name} />
+        <CardContent>
+          <AddTask />
+          <TasksList title="To Do" tasks={uncompletedTasks} />
+          <TasksList title="Done" tasks={completedTasks} />
+        </CardContent>
+        <CardActions disableSpacing>
+          <IconButton aria-label="add task">
+            <Add />
           </IconButton>
-        }
-        title={props.name}
-      />
-      <CardContent>
-        <AddTask projectId={props.id} mutate={mutate} />
-        <TasksList
-          projectId={props.id}
-          mutate={mutate}
-          title="To Do"
-          tasks={uncompletedTasks}
-        />
-        <TasksList
-          projectId={props.id}
-          mutate={mutate}
-          title="Done"
-          tasks={completedTasks}
-        />
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add task">
-          <Add />
-        </IconButton>
-      </CardActions>
-    </Card>
+        </CardActions>
+      </Card>
+    </ProjectProvider>
   );
 };

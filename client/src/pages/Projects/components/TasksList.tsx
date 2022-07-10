@@ -1,34 +1,28 @@
 import { List, ListSubheader } from "@mui/material";
-import { KeyedMutator } from "swr";
 import { useAuth } from "../../../hooks/useAuth";
-import { APIProjectTasksList } from "./Project";
+import { useProject } from "../../../hooks/useProject";
 import { Task, TasksListItem } from "./TasksListItem";
 
 export type TaskListProps = {
-  projectId: number;
   title: string;
   tasks: Task[];
-  mutate: KeyedMutator<APIProjectTasksList>;
 };
 
-export const TasksList = ({
-  projectId,
-  title,
-  tasks,
-  mutate,
-}: TaskListProps) => {
+export const TasksList = ({ title, tasks }: TaskListProps) => {
   const { apiClient } = useAuth();
+  const { tasksMutate, project } = useProject();
+
   const handleCheck = (taskId: number) => {
-    apiClient(`projects/${projectId}/tasks/${taskId}/finish`).then((res) => {
-      mutate();
+    apiClient(`projects/${project.id}/tasks/${taskId}/finish`).then((res) => {
+      tasksMutate();
     });
   };
 
   const handleDelete = (taskId: number) => {
-    apiClient(`projects/${projectId}/tasks/${taskId}`, {
+    apiClient(`projects/${project.id}/tasks/${taskId}`, {
       method: "DELETE",
     }).then((res) => {
-      mutate();
+      tasksMutate();
     });
   };
 
