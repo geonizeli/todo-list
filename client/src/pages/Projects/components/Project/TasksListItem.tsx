@@ -4,15 +4,17 @@ import {
   IconButton,
   ListItem,
   ListItemAvatar,
-  ListItemText
+  ListItemText,
+  Tooltip,
 } from "@mui/material";
 import { useState } from "react";
+import { formatDate } from "../../../../utils/formatDate";
 
 export type Task = {
   id: number;
   description: string;
-  createdAt: Date;
-  finishedAt?: Date;
+  createdAt: string;
+  finishedAt?: string;
 };
 
 export type TasksListItemProps = {
@@ -42,19 +44,38 @@ export const TasksListItem = ({
   const blockInteration = finished || isLoading;
 
   return (
-    <ListItem
-      secondaryAction={
-        finished ? null : (
-          <IconButton onClick={handleDelete} disabled={blockInteration} edge="end" aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        )
-      }
+    <Tooltip
+      title={`
+        ${
+          task.finishedAt ? `Finished at: ${formatDate(task.finishedAt)} |` : ""
+        }
+        ${`Created at: ${formatDate(task.createdAt)}`}
+      `}
+      placement="top-start"
     >
-      <ListItemAvatar>
-        <Checkbox onChange={handleCheck} disabled={blockInteration} checked={blockInteration} />
-      </ListItemAvatar>
-      <ListItemText primary="Single-line item" />
-    </ListItem>
+      <ListItem
+        secondaryAction={
+          finished ? null : (
+            <IconButton
+              onClick={handleDelete}
+              disabled={blockInteration}
+              edge="end"
+              aria-label="delete"
+            >
+              <DeleteIcon />
+            </IconButton>
+          )
+        }
+      >
+        <ListItemAvatar>
+          <Checkbox
+            onChange={handleCheck}
+            disabled={blockInteration}
+            checked={blockInteration}
+          />
+        </ListItemAvatar>
+        <ListItemText primary={task.description} />
+      </ListItem>
+    </Tooltip>
   );
 };
