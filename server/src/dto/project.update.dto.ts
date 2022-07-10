@@ -1,3 +1,3 @@
 export type UpdateProjectDto = {
-  name: string
+  name?: string
 }

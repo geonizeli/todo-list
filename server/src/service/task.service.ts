@@ -1,4 +1,4 @@
-import { NewTaskDto } from "../dto/newTask.dto";
+import { NewTaskDto } from "../dto/task.new.dto";
 import { Project } from "../entity/project.entity";
 import { Task } from "../entity/task.entity";
 import { taskRepository } from "../repository/task.repository";

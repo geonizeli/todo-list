@@ -1,5 +1,5 @@
 import { validate } from "class-validator"
-import { NewUserDto } from "../dto/newUser.dto"
+import { NewUserDto } from "../dto/user.new.dto"
 import { User } from "../entity/user.entity"
 import { userRepository } from "../repository/user.repository"
 import { AuthService } from "./auth.service"

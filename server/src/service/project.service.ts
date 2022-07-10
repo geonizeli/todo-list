@@ -1,14 +1,17 @@
 import { validate } from "class-validator";
-import { NewProjectDto } from "../dto/newProject.dto";
-import { UpdateProjectDto } from "../dto/updateProject.dto";
+import { NewProjectDto } from "../dto/project.new.dto";
+import { UpdateProjectDto } from "../dto/project.update.dto";
 import { Project } from "../entity/project.entity";
 import { User } from "../entity/user.entity";
 import { projectRepository } from "../repository/project.repository";
 import { UserService } from "./user.service";
 
-async function create(newProject: NewProjectDto): Promise<Project> {
+async function create(
+  userId: User["id"],
+  newProject: NewProjectDto
+): Promise<Project> {
   const project = new Project();
-  const user = await UserService.findUserById(newProject.userId);
+  const user = await UserService.findUserById(userId);
 
   project.name = newProject.name;
   project.user = user;
@@ -40,9 +43,9 @@ async function destroy(project: Project): Promise<boolean> {
 
 async function update(
   project: Project,
-  updateProjectDto: UpdateProjectDto
+  data: UpdateProjectDto
 ): Promise<boolean> {
-  projectRepository.merge(project, updateProjectDto);
+  projectRepository.merge(project, data);
   const updateResult = await projectRepository.save(project);
 
   return !!updateResult;
@@ -64,5 +67,5 @@ export const ProjectService = {
   listAllByUserId,
   destroy,
   update,
-  findProjectFromUserById
+  findProjectFromUserById,
 };
